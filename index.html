@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>handtypedcode</title>
+  <meta name="description" content="Code typed by a human, one key at a time. Paste is off, every keystroke is recorded, and anyone can watch the replay.">
+  <meta name="theme-color" content="#E6E7EA" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15161A" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="handtypedcode">
+  <meta property="og:description" content="Code typed by a human, one key at a time. Watch every keystroke, typos included.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Martian+Mono:wdth,wght@75..112.5,400..800&display=swap">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar" aria-label="Site">
+    <a class="brand" href="/" data-link><span class="hand">hand</span>typedcode</a>
+    <div class="auth" id="auth"></div>
+  </nav>
+
+  <!-- Home view -->
+  <div id="view-home" style="display:grid; gap:48px">
+    <header class="mast">
+      <h1 class="wordmark"><span class="hand">hand</span>typed<wbr>code<span class="cur" aria-hidden="true"></span></h1>
+      <p class="lede">Code typed by a human, one key at a time. <span>Paste is turned off, every keystroke is recorded, and anyone can watch the replay, typos included.</span></p>
+    </header>
+
+    <section aria-labelledby="type-h" style="display:grid; gap:14px">
+      <div class="sec-row"><h2 class="sec" id="type-h">Type a snippet</h2><span class="signin-note" id="signin-note"></span></div>
+      <div class="bench">
+        <div class="bench-top">
+          <input id="f-title" class="field" type="text" maxlength="90" placeholder="Title, e.g. FizzBuzz without looking" aria-label="Snippet title" autocomplete="off">
+          <select id="f-lang" class="field" aria-label="Language"></select>
+        </div>
+        <textarea id="f-code" maxlength="8000" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-label="Code editor. Paste is disabled." placeholder="Start typing. The recording begins with your first key."></textarea>
+        <div class="bench-tl"><canvas id="ed-tl" class="tl" aria-hidden="true"></canvas></div>
+        <div class="status" id="ed-status"></div>
+        <p class="flash" id="flash" role="status" aria-live="polite"></p>
+        <div class="bench-foot">
+          <div class="hints"><span><kbd>Tab</kbd> inserts spaces</span><span><kbd>Enter</kbd> keeps indent</span><span><kbd>⌘V</kbd> does nothing</span></div>
+          <div class="actions">
+            <button class="key" id="b-reset" type="button">Start over</button>
+            <button class="key" id="b-preview" type="button">Watch replay</button>
+            <button class="key primary" id="b-publish" type="button">Publish</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Profile view -->
+  <header id="view-user" class="profile-head" hidden>
+    <img class="avatar" id="u-avatar" alt="">
+    <div><h1 id="u-name"></h1><p id="u-sub"></p></div>
+  </header>
+
+  <section aria-labelledby="gal-h">
+    <div class="sec-row"><h2 class="sec" id="gal-h">Gallery</h2><div class="filters" id="filters" role="group" aria-label="Filter by language"></div></div>
+    <div id="gallery-empty" class="empty"><strong>Loading the gallery…</strong>Hand-typed snippets appear here once they're published.</div>
+    <div class="grid" id="grid"></div>
+    <div class="more-row"><button class="key" id="b-more" type="button" hidden>Load more</button></div>
+  </section>
+
+  <footer class="foot">
+    <span>Every snippet here was typed key by key. Paste is off, and the server replays each recording before saving it.</span>
+    <span>handtypedcode</span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sh-title">
+  <div class="sheet-inner">
+    <div class="sheet-bar">
+      <button class="key" id="sh-back" type="button">← Back</button>
+      <span class="hints"><span><kbd>Space</kbd> play or pause</span><span><kbd>Esc</kbd> close</span></span>
+    </div>
+    <div>
+      <div class="meta" id="sh-meta"></div>
+      <h2 class="sh-title" id="sh-title"></h2>
+    </div>
+    <div class="player">
+      <pre class="replay idle" id="sh-pre"><code id="sh-code"></code></pre>
+      <div class="ctrl">
+        <canvas id="sh-tl" class="tl tall" aria-label="Keystroke timeline. Click to jump."></canvas>
+        <div class="ctrl-row">
+          <button class="key primary" id="sh-play" type="button">Play</button>
+          <input type="range" id="sh-scrub" min="0" max="0" value="0" step="1" aria-label="Replay position">
+          <span class="clock" id="sh-clock">0:00 / 0:00</span>
+        </div>
+        <div class="ctrl-row" style="justify-content:space-between">
+          <div class="speeds" role="group" aria-label="Playback speed" id="sh-speeds"></div>
+          <label class="trim"><input type="checkbox" id="sh-trim" checked> Shorten pauses over 2 s</label>
+          <div class="legend"><span><i style="background:var(--muted)"></i>typed</span><span><i style="background:var(--accent)"></i>deleted</span></div>
+        </div>
+      </div>
+    </div>
+    <dl class="facts" id="sh-facts"></dl>
+    <div class="proof" id="sh-proof"></div>
+    <div class="actions">
+      <button class="key" id="sh-share" type="button">Copy link</button>
+      <button class="key" id="sh-copy" type="button">Copy code</button>
+      <button class="key danger" id="sh-del" type="button" hidden>Delete snippet</button>
+    </div>
+  </div>
+</div>
+
+<script src="/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
